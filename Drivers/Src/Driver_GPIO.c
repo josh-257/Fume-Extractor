@@ -8,40 +8,40 @@
 
 #include "Driver_GPIO.h"
 
-void GPIO_Init(GPIO_TypeDef *pGPIOx, const GPIO_PinConfig_t *pGPIOConfig)
+void GPIO_Init(GPIO_Handle_t *pGPIOHandle)
 {
   uint32_t temp, shift_val;
-  shift_val = pGPIOConfig->PinNumber * 2;
+  shift_val = pGPIOHandle->GPIO_Config.PinNumber * 2;
 
   //Configure mode
-  temp = pGPIOConfig->PinMode << shift_val;
-  pGPIOx->MODER &= ~(0x3 << shift_val);
-  pGPIOx->MODER |= temp;
+  temp = pGPIOHandle->GPIO_Config.PinMode << shift_val;
+  pGPIOHandle->pGPIOx->MODER &= ~(0x3 << shift_val);
+  pGPIOHandle->pGPIOx->MODER |= temp;
 
   //Configure speed
-  temp = pGPIOConfig->PinSpeed << shift_val;
-  pGPIOx->OSPEEDR &= ~(0x3 << shift_val);
-  pGPIOx->OSPEEDR |= temp;
+  temp = pGPIOHandle->GPIO_Config.PinSpeed << shift_val;
+  pGPIOHandle->pGPIOx->OSPEEDR &= ~(0x3 << shift_val);
+  pGPIOHandle->pGPIOx->OSPEEDR |= temp;
 
   //Configure pupd settings
-  temp = pGPIOConfig->PinPuPdControl << shift_val;
-  pGPIOx->PUPDR &= ~(0x3 << shift_val);
-  pGPIOx->PUPDR |= temp;
+  temp = pGPIOHandle->GPIO_Config.PinPuPdControl << shift_val;
+  pGPIOHandle->pGPIOx->PUPDR &= ~(0x3 << shift_val);
+  pGPIOHandle->pGPIOx->PUPDR |= temp;
 
   //Configure output type
-  temp = pGPIOConfig->PinOPType << shift_val;
-  pGPIOx->OTYPER &= ~(0x3 << shift_val);
-  pGPIOx->OTYPER |= temp;
+  temp = pGPIOHandle->GPIO_Config.PinOPType << shift_val;
+  pGPIOHandle->pGPIOx->OTYPER &= ~(0x3 << shift_val);
+  pGPIOHandle->pGPIOx->OTYPER |= temp;
 
   //Configure alt functionality
-  if(pGPIOConfig->PinMode == GPIO_MODE_ALTFN)
+  if(pGPIOHandle->GPIO_Config.PinMode == GPIO_MODE_ALTFN)
   {
     //Select appropriate alt fun reg (0-7 Alt fun low, 8-15 Alt fun high)
-    uint8_t temp1 = pGPIOConfig->PinNumber / 8;
-    uint8_t temp2 = pGPIOConfig->PinNumber % 8;
+    uint8_t temp1 = pGPIOHandle->GPIO_Config.PinNumber / 8;
+    uint8_t temp2 = pGPIOHandle->GPIO_Config.PinNumber % 8;
 
-    pGPIOx->AFR[temp1] &= ~(0xf << (4 * temp2));
-    pGPIOx->AFR[temp1] |= pGPIOConfig->AltFunMode << (4 * temp2);
+    pGPIOHandle->pGPIOx->AFR[temp1] &= ~(0xf << (4 * temp2));
+    pGPIOHandle->pGPIOx->AFR[temp1] |= pGPIOHandle->GPIO_Config.AltFunMode << (4 * temp2);
   }
 }
 
@@ -117,84 +117,3 @@ void GPIO_ToggleOutputPin(GPIO_TypeDef *pGPIOx, uint8_t PinNumber)
   pGPIOx->ODR ^= (1 << PinNumber);
 }
 
-void GPIO_PeripheralClockControl(GPIO_TypeDef *pGPIOx, uint8_t EnorDi)
-{
-  if (EnorDi == ENABLE)
-  {
-    if (pGPIOx == GPIOA)
-    {
-      GPIOA_PCLK_EN();
-    }
-    else if (pGPIOx == GPIOB)
-    {
-      GPIOB_PCLK_EN();
-    }
-    else if (pGPIOx == GPIOC)
-    {
-      GPIOC_PCLK_EN();
-    }
-    else if (pGPIOx == GPIOD)
-    {
-      GPIOD_PCLK_EN();
-    }
-    else if (pGPIOx == GPIOE)
-    {
-      GPIOE_PCLK_EN();
-    }
-    else if (pGPIOx == GPIOF)
-    {
-      GPIOF_PCLK_EN();
-    }
-    else if (pGPIOx == GPIOG)
-    {
-      GPIOG_PCLK_EN();
-    }
-    else if (pGPIOx == GPIOH)
-    {
-      GPIOH_PCLK_EN();
-    }
-    else if (pGPIOx == GPIOI)
-    {
-      GPIOI_PCLK_EN();
-    }
-  }
-  else
-  {
-    if (pGPIOx == GPIOA)
-    {
-        GPIOA_PCLK_DI();
-    }
-    else if (pGPIOx == GPIOB)
-    {
-        GPIOB_PCLK_DI();
-    }
-    else if (pGPIOx == GPIOC)
-    {
-        GPIOC_PCLK_DI();
-    }
-    else if (pGPIOx == GPIOD)
-    {
-        GPIOD_PCLK_DI();
-    }
-    else if (pGPIOx == GPIOE)
-    {
-        GPIOE_PCLK_DI();
-    }
-    else if (pGPIOx == GPIOF)
-    {
-        GPIOF_PCLK_DI();
-    }
-    else if (pGPIOx == GPIOG)
-    {
-        GPIOG_PCLK_DI();
-    }
-    else if (pGPIOx == GPIOH)
-    {
-        GPIOH_PCLK_DI();
-    }
-    else if (pGPIOx == GPIOI)
-    {
-        GPIOI_PCLK_DI();
-    }
-  }
-}

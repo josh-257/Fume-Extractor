@@ -21,6 +21,13 @@ typedef struct{
   uint8_t AltFunMode;
 }GPIO_PinConfig_t;
 
+//Handle structure for GPIO pin
+typedef struct{
+  GPIO_TypeDef *pGPIOx; //Holds base address of port to which the pin belongs to
+  GPIO_PinConfig_t GPIO_Config; // Holds GPIO config settings
+}GPIO_Handle_t;
+
+
 //Pin modes
 #define GPIO_MODE_IN          0
 #define GPIO_MODE_OUT         1
@@ -49,45 +56,6 @@ typedef struct{
 #define GPIOH_PCLK_DI()       (RCC->AHB1ENR &= ~(1 << 7))
 #define GPIOI_PCLK_DI()       (RCC->AHB1ENR &= ~(1 << 8))
 
-//Clock enable macros for GPIOx peripherals
-//Dummy read added to get around RCC peripheral delay (STM32F4 Errata)
-#define GPIOA_PCLK_EN()       do{(RCC->AHB1ENR |= (1 << RCC_AHB1ENR_GPIOAEN_Pos));\
-															volatile uint32_t dummy = RCC->AHB1ENR;\
-															(void)dummy;}while(0)
-
-#define GPIOB_PCLK_EN()       do{(RCC->AHB1ENR |= (1 << RCC_AHB1ENR_GPIOBEN_Pos));\
-															volatile uint32_t dummy = RCC->AHB1ENR;\
-															(void)dummy;}while(0)
-
-#define GPIOC_PCLK_EN()       do{(RCC->AHB1ENR |= (1 << RCC_AHB1ENR_GPIOCEN_Pos));\
-															volatile uint32_t dummy = RCC->AHB1ENR;\
-															(void)dummy;}while(0)
-
-#define GPIOD_PCLK_EN()       do{(RCC->AHB1ENR |= (1 << RCC_AHB1ENR_GPIODEN_Pos));\
-															volatile uint32_t dummy = RCC->AHB1ENR;\
-															(void)dummy;}while(0)
-
-#define GPIOE_PCLK_EN()       do{(RCC->AHB1ENR |= (1 << RCC_AHB1ENR_GPIOEEN_Pos));\
-															volatile uint32_t dummy = RCC->AHB1ENR;\
-															(void)dummy;}while(0)
-
-#define GPIOF_PCLK_EN()       do{(RCC->AHB1ENR |= (1 << RCC_AHB1ENR_GPIOFEN_Pos));\
-															volatile uint32_t dummy = RCC->AHB1ENR;\
-															(void)dummy;}while(0)
-
-#define GPIOG_PCLK_EN()       do{(RCC->AHB1ENR |= (1 << RCC_AHB1ENR_GPIOGEN_Pos));\
-															volatile uint32_t dummy = RCC->AHB1ENR;\
-															(void)dummy;}while(0)
-
-#define GPIOH_PCLK_EN()       do{(RCC->AHB1ENR |= (1 << RCC_AHB1ENR_GPIOHEN_Pos));\
-															volatile uint32_t dummy = RCC->AHB1ENR;\
-															(void)dummy;}while(0)
-
-#define GPIOI_PCLK_EN()       do{(RCC->AHB1ENR |= (1 << RCC_AHB1ENR_GPIOIEN_Pos));\
-															volatile uint32_t dummy = RCC->AHB1ENR;\
-															(void)dummy;}while(0)
-
-
 /*******************************API's supported by this driver*******************************/
 
 /***************************************************************************
@@ -95,7 +63,7 @@ typedef struct{
  * @param   pGPIOHandle: Pointer to handle structure containing user-defined
  *          configuration.
  */
-void GPIO_Init(GPIO_TypeDef *pGPIOx, const GPIO_PinConfig_t *pGPIOConfig);
+void GPIO_Init(GPIO_Handle_t *pGPIOx);
 
 /***************************************************************************
  * @brief   Resets all registers in corresponding GPIO port.
