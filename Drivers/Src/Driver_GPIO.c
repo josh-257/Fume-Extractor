@@ -29,8 +29,8 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle)
   pGPIOHandle->pGPIOx->PUPDR |= temp;
 
   //Configure output type
-  temp = pGPIOHandle->GPIO_Config.PinOPType << shift_val;
-  pGPIOHandle->pGPIOx->OTYPER &= ~(0x3 << shift_val);
+  temp = pGPIOHandle->GPIO_Config.PinOPType << pGPIOHandle->GPIO_Config.PinNumber;
+  pGPIOHandle->pGPIOx->OTYPER &= ~(0x3 << pGPIOHandle->GPIO_Config.PinNumber);
   pGPIOHandle->pGPIOx->OTYPER |= temp;
 
   //Configure alt functionality

@@ -56,6 +56,47 @@ typedef struct{
 #define GPIOH_PCLK_DI()       (RCC->AHB1ENR &= ~(1 << 7))
 #define GPIOI_PCLK_DI()       (RCC->AHB1ENR &= ~(1 << 8))
 
+#define GPIOA_PCLK_EN()       (RCC->AHB1ENR |= (1 << 0))
+#define GPIOB_PCLK_EN()       (RCC->AHB1ENR |= (1 << 1))
+#define GPIOC_PCLK_EN()       (RCC->AHB1ENR |= (1 << 2))
+#define GPIOD_PCLK_EN()       (RCC->AHB1ENR |= (1 << 3))
+#define GPIOE_PCLK_EN()       (RCC->AHB1ENR |= (1 << 4))
+#define GPIOF_PCLK_EN()       (RCC->AHB1ENR |= (1 << 5))
+#define GPIOG_PCLK_EN()       (RCC->AHB1ENR |= (1 << 6))
+#define GPIOH_PCLK_EN()       (RCC->AHB1ENR |= (1 << 7))
+#define GPIOI_PCLK_EN()       (RCC->AHB1ENR |= (1 << 8))
+
+#define GPIO_OP_TYPE_PP     0
+#define GPIO_OP_TYPE_OD     1
+
+#define GPIO_SPEED_LOW      0
+#define GPIO_SPEED_MED      1
+#define GPIO_SPEED_HIGH     2
+#define GPIO_SPEED_VHIGH    3
+
+
+#define GPIO_PIN_NOPUPD     0
+#define GPIO_PIN_PU         1
+#define GPIO_PIN_PD         2
+
+#define GPIO_AF_AF0         0
+#define GPIO_AF_AF1         1
+#define GPIO_AF_AF2         2
+#define GPIO_AF_AF3         3
+#define GPIO_AF_AF4         4
+#define GPIO_AF_AF5         5
+#define GPIO_AF_AF6         6
+#define GPIO_AF_AF7         7
+#define GPIO_AF_AF8         8
+#define GPIO_AF_AF9         9
+#define GPIO_AF_AF10        10
+#define GPIO_AF_AF11        11
+#define GPIO_AF_AF12        12
+#define GPIO_AF_AF13        13
+#define GPIO_AF_AF14        14
+#define GPIO_AF_AF15        15
+
+
 /*******************************API's supported by this driver*******************************/
 
 /***************************************************************************
