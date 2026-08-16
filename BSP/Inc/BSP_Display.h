@@ -5,10 +5,12 @@
  *      Author: joshb
  */
 
-#ifndef INC_DISPLAY_H_
-#define INC_DISPLAY_H_
+#ifndef INC_BSP_DISPLAY_H_
+#define INC_BSP_DISPLAY_H_
 
-#include "Driver_I2C.h"
+
+#include <stddef.h>
+#include <stdint.h>
 
 // --- SSD1306 COMMAND REGISTER MACROS ---
 
@@ -77,13 +79,39 @@
 
 #define FRAME_BUFFER_SIZE               1024
 
-void Clock_Init(void);
-void Display_WriteChar(I2C_Handle_t *pI2CHandle, uint8_t data);
-void Display_SetCursor(I2C_Handle_t *pI2CHandle, uint8_t col_start, uint8_t page_start);
-void Display_Init(I2C_Handle_t *pI2CHandle);
-void Display_Clear(I2C_Handle_t *pI2CHandle);
+/*****************************************************
+ * @brief   Performs all commands to set up the display
+ *          ready for the first frame. The display is
+ *          setup in horizontal mode.
+ */
+void Display_Init(void);
+
+/*****************************************************
+ * @brief   Writes 1 byte of data onto the display.
+ * @param   pI2CHandle: Pointer to handle structure containing user-defined
+ *          configuration.
+ */
+void Display_WriteChar(uint8_t data);
+
+/*****************************************************
+ * @brief   Moves cursor to desired position on screen.
+ * @param   col_start: Integer from 0-127 specifying the
+ *          horizontal position (coloumn) of the cursor.
+ * @param   page_start: Integer from 0-7 specifying the
+ *          vertical position (line) of the cursor.
+ * @note    The end position of both the coloumn and page
+ *          are set to max (127, 7) to use up all of the
+ *          rest of the display.
+ */
+void Display_SetCursor(uint8_t col_start, uint8_t page_start);
+
+/*****************************************************
+ * @brief   Sets every bit to 0 clearing display and
+ *          then resets cursor back to (0, 0).
+ */
+void Display_Clear(void);
 
 
 
 
-#endif /* INC_DISPLAY_H_ */
+#endif /* INC_BSP_DISPLAY_H_ */

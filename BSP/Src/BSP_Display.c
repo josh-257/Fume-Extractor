@@ -4,22 +4,15 @@
  *  Created on: 13 Aug 2026
  *      Author: joshb
  */
+#include "BSP_I2C_ADT.h"
 #include "stm32f407xx.h"
-#include "Display.h"
+#include "stm32f4xx.h"
+#include "BSP_Display.h"
 
-
-void Clock_Init(void)
+void Display_Init(void)
 {
-  GPIOD_PCLK_EN();
-  GPIOB_PCLK_EN();
-  GPIOA_PCLK_EN();
-  SYSCFG_PCLK_EN();
-  I2C1_PCLK_EN();
+  I2C_ADT BSP_I2CHandle = BSP_GetI2CHandle();
 
-}
-
-void Display_Init(I2C_Handle_t *pI2CHandle)
-{
   static const uint8_t displayInitCmds[] = {
       OLED_CONTROL_BYTE_COMMAND,
       OLED_CMD_DISPLAY_OFF,
@@ -38,29 +31,21 @@ void Display_Init(I2C_Handle_t *pI2CHandle)
       OLED_CMD_DISPLAY_ON
   };
 
-  I2C_MasterSendData(pI2CHandle, displayInitCmds, DISPLAY_INIT_CMDS_LEN, OLED_SLAVE_ADDRESS, I2C_SR_DI);
+  BSP_SendData(BSP_I2CHandle, displayInitCmds, DISPLAY_INIT_CMDS_LEN, OLED_SLAVE_ADDRESS, DISABLE);
 }
 
-void Display_SetCursor(I2C_Handle_t *pI2CHandle, uint8_t col_start, uint8_t page_start)
+void Display_SetCursor(uint8_t col_start, uint8_t page_start)
 {
+  I2C_ADT BSP_I2CHandle = BSP_GetI2CHandle();
+
   if(col_start > 127)
   {
     col_start = 127;
   }
 
-  if(col_start < 0)
-  {
-    col_start = 0;
-  }
-
   if(page_start > 7)
   {
     page_start = 7;
-  }
-
-  if(page_start < 0)
-  {
-    page_start = 0;
   }
   //Array to store sequence of commands
   uint8_t cmd[SET_CURSOR_CMD_LEN];
@@ -74,35 +59,35 @@ void Display_SetCursor(I2C_Handle_t *pI2CHandle, uint8_t col_start, uint8_t page
   cmd[6] = OLED_PAGE_END;
 
   //Send off all commands in one go
-  I2C_MasterSendData(pI2CHandle, cmd, SET_CURSOR_CMD_LEN, OLED_SLAVE_ADDRESS, I2C_SR_DI);
+  BSP_SendData(BSP_I2CHandle, cmd, SET_CURSOR_CMD_LEN, OLED_SLAVE_ADDRESS, DISABLE);
 }
 
-void Display_WriteChar(I2C_Handle_t *pI2CHandle, uint8_t data)
+void Display_WriteChar(uint8_t data)
 {
+  I2C_ADT BSP_I2CHandle = BSP_GetI2CHandle();
+
   uint8_t cmd[2];
   cmd[0] = OLED_CONTROL_BYTE_DATA;
   cmd[1] = data;
-  I2C_MasterSendData(pI2CHandle, cmd, 2, OLED_SLAVE_ADDRESS,  I2C_SR_DI);
+  BSP_SendData(BSP_I2CHandle, cmd, 2, OLED_SLAVE_ADDRESS,  DISABLE);
 }
 
-void Display_Clear(I2C_Handle_t *pI2CHandle)
+void Display_Clear(void)
 {
+  I2C_ADT BSP_I2CHandle = BSP_GetI2CHandle();
 
-    Display_SetCursor(pI2CHandle, 0, 0);
+  Display_SetCursor(0, 0);
 
-    uint8_t frame_buffer[1025];
-    frame_buffer[0] = 0x40;
+  //Store array in BSS to not overflow the stack
+  static uint8_t frame_buffer[1025];
+  frame_buffer[0] = 0x40;
 
-    for(int i = 1; i <= 1024; i++)
-    {
-        frame_buffer[i] = 0x00;
-    }
+  for(int i = 1; i <= 1024; i++)
+  {
+      frame_buffer[i] = 0x00;
+  }
 
-    I2C_MasterSendData(pI2CHandle, frame_buffer, FRAME_BUFFER_SIZE, OLED_SLAVE_ADDRESS, I2C_SR_DI);
+  BSP_SendData(BSP_I2CHandle, frame_buffer, FRAME_BUFFER_SIZE, OLED_SLAVE_ADDRESS, DISABLE);
 }
 
-//
-//void Display_WriteCmd(I2C_Handle_t pI2CHandle, uint8_t cmd)
-//{
-//
-//}
+
