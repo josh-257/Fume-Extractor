@@ -5,11 +5,12 @@
  *      Author: joshb
  */
 #include "BSP_I2C_ADT.h"
+#include <stdbool.h>
 #include "stm32f407xx.h"
 #include "stm32f4xx.h"
 #include "BSP_Display.h"
 
-void Display_Init(void)
+void BSP_DisplayInit(void)
 {
   I2C_ADT BSP_I2CHandle = BSP_GetI2CHandle();
 
@@ -34,60 +35,42 @@ void Display_Init(void)
   BSP_SendData(BSP_I2CHandle, displayInitCmds, DISPLAY_INIT_CMDS_LEN, OLED_SLAVE_ADDRESS, DISABLE);
 }
 
-void Display_SetCursor(uint8_t col_start, uint8_t page_start)
+void BSP_FlushFrame(uint8_t frame[])
 {
   I2C_ADT BSP_I2CHandle = BSP_GetI2CHandle();
+  BSP_SendData(BSP_I2CHandle, frame, FRAME_BUFFER_SIZE, OLED_SLAVE_ADDRESS, DISABLE);
+}
 
-  if(col_start > 127)
-  {
-    col_start = 127;
-  }
-
-  if(page_start > 7)
-  {
-    page_start = 7;
-  }
+void BSP_ResetCursor(void)
+{
+  I2C_ADT BSP_I2CHandle = BSP_GetI2CHandle();
   //Array to store sequence of commands
   uint8_t cmd[SET_CURSOR_CMD_LEN];
 
   cmd[0] = OLED_CONTROL_BYTE_COMMAND;
   cmd[1] = OLED_CMD_SET_COLOUMN_ADDR;
-  cmd[2] = col_start;
+  cmd[2] = 0;
   cmd[3] = OLED_COL_END;
-  cmd[4] = OLED_CMD_SET_PAGE_ADDR;
-  cmd[5] = page_start;
-  cmd[6] = OLED_PAGE_END;
+
+  cmd[4] = OLED_CONTROL_BYTE_COMMAND;
+  cmd[5] = OLED_CMD_SET_PAGE_ADDR;
+  cmd[6] = 0;
+  cmd[7] = OLED_PAGE_END;
 
   //Send off all commands in one go
   BSP_SendData(BSP_I2CHandle, cmd, SET_CURSOR_CMD_LEN, OLED_SLAVE_ADDRESS, DISABLE);
 }
 
-void Display_WriteChar(uint8_t data)
-{
-  I2C_ADT BSP_I2CHandle = BSP_GetI2CHandle();
+//void Display_WriteChar(uint8_t data)
+//{
+//  I2C_ADT BSP_I2CHandle = BSP_GetI2CHandle();
+//
+//  uint8_t cmd[2];
+//  cmd[0] = OLED_CONTROL_BYTE_DATA;
+//  cmd[1] = data;
+//  BSP_SendData(BSP_I2CHandle, cmd, 2, OLED_SLAVE_ADDRESS,  DISABLE);
+//}
 
-  uint8_t cmd[2];
-  cmd[0] = OLED_CONTROL_BYTE_DATA;
-  cmd[1] = data;
-  BSP_SendData(BSP_I2CHandle, cmd, 2, OLED_SLAVE_ADDRESS,  DISABLE);
-}
 
-void Display_Clear(void)
-{
-  I2C_ADT BSP_I2CHandle = BSP_GetI2CHandle();
-
-  Display_SetCursor(0, 0);
-
-  //Store array in BSS to not overflow the stack
-  static uint8_t frame_buffer[1025];
-  frame_buffer[0] = 0x40;
-
-  for(int i = 1; i <= 1024; i++)
-  {
-      frame_buffer[i] = 0x00;
-  }
-
-  BSP_SendData(BSP_I2CHandle, frame_buffer, FRAME_BUFFER_SIZE, OLED_SLAVE_ADDRESS, DISABLE);
-}
 
 

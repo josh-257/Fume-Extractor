@@ -8,6 +8,23 @@
 #ifndef INC_BSP_SENSOR_H_
 #define INC_BSP_SENSOR_H_
 
+#include "BSP_I2C_ADT.h"
 
+#define SENSOR_SLAVE_ADDR           0x58
+
+#define SENSOR_INIT_CMD_MSB         0x20
+#define SENSOR_INIT_CMD_LSB         0x03
+#define SENSOR_INIT_CMD_LEN         0x02
+
+#define SENSOR_MEASURE_CMD_MSB      0x20
+#define SENSOR_MEASURE_CMD_LSB      0x08
+#define SENSOR_MEASURE_CMD_LEN      0x02
+
+#define SENS_DATA_LEN 6
+
+
+
+uint8_t *BSP_GetSensorReading(void);
+void BSP_SensorInit(void);
 
 #endif /* INC_BSP_SENSOR_H_ */

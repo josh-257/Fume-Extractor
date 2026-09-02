@@ -74,7 +74,7 @@
 #define OLED_COL_END                    0x7F
 #define OLED_PAGE_END                   0x07
 
-#define SET_CURSOR_CMD_LEN              0x07
+#define SET_CURSOR_CMD_LEN              0x08
 #define DISPLAY_INIT_CMDS_LEN           (sizeof(displayInitCmds) / sizeof(displayInitCmds[0]))
 
 #define FRAME_BUFFER_SIZE               1024
@@ -84,34 +84,10 @@
  *          ready for the first frame. The display is
  *          setup in horizontal mode.
  */
-void Display_Init(void);
+void BSP_DisplayInit(void);
 
-/*****************************************************
- * @brief   Writes 1 byte of data onto the display.
- * @param   pI2CHandle: Pointer to handle structure containing user-defined
- *          configuration.
- */
-void Display_WriteChar(uint8_t data);
+void BSP_FlushFrame(uint8_t frame[]);
 
-/*****************************************************
- * @brief   Moves cursor to desired position on screen.
- * @param   col_start: Integer from 0-127 specifying the
- *          horizontal position (coloumn) of the cursor.
- * @param   page_start: Integer from 0-7 specifying the
- *          vertical position (line) of the cursor.
- * @note    The end position of both the coloumn and page
- *          are set to max (127, 7) to use up all of the
- *          rest of the display.
- */
-void Display_SetCursor(uint8_t col_start, uint8_t page_start);
-
-/*****************************************************
- * @brief   Sets every bit to 0 clearing display and
- *          then resets cursor back to (0, 0).
- */
-void Display_Clear(void);
-
-
-
+void BSP_ResetCursor(void);
 
 #endif /* INC_BSP_DISPLAY_H_ */

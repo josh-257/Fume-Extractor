@@ -42,6 +42,24 @@ static void I2C1_GPIOInits(void)
   GPIO_Init(&I2CPins);
 }
 
+static void PWM_GPIOInits(void)
+{
+  GPIO_Handle_t PWMPin;
+  PWMPin.pGPIOx = GPIOB;
+  PWMPin.GPIO_Config.PinMode = GPIO_MODE_ALTFN;
+  PWMPin.GPIO_Config.PinOPType = GPIO_OP_TYPE_PP;
+  PWMPin.GPIO_Config.AltFunMode = 2;
+  PWMPin.GPIO_Config.PinSpeed = GPIO_SPEED_HIGH;
+  GPIO_Init(&PWMPin);
+}
+
+void PWM_Inits(void)
+{
+  PWM_GPIOInits();
+
+
+}
+
 static void Clock_Init(void)
 {
   GPIOD_PCLK_EN();
@@ -72,4 +90,12 @@ void BSP_SendData(I2C_ADT private_handle, const uint8_t *pTxBuffer, uint32_t len
 
   I2C_MasterSendData(&data_handle, pTxBuffer, len, slave_address, Sr);
 }
+
+void BSP_ReceiveData(I2C_ADT private_handle, const uint8_t *pRxBuffer, uint32_t len, uint8_t slave_address, uint8_t Sr)
+{
+  I2C_Handle_t data_handle = private_handle->I2C_Handle;
+
+  I2C_MasterReceiveData(&data_handle, pRxBuffer, len, slave_address, Sr);
+}
+
 
