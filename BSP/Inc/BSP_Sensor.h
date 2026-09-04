@@ -14,13 +14,13 @@
 
 #define SENSOR_INIT_CMD_MSB         0x20
 #define SENSOR_INIT_CMD_LSB         0x03
-#define SENSOR_INIT_CMD_LEN         0x02
+#define SENSOR_INIT_CMD_LEN         (sizeof(cmds)/sizeof(cmds[0]))
 
 #define SENSOR_MEASURE_CMD_MSB      0x20
 #define SENSOR_MEASURE_CMD_LSB      0x08
-#define SENSOR_MEASURE_CMD_LEN      0x02
+#define SENSOR_MEASURE_CMD_LEN      (sizeof(cmds)/sizeof(cmds[0]))
 
-#define SENS_DATA_LEN 6
+#define SENS_DATA_LEN 2
 
 
 
