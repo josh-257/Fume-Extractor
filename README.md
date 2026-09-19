@@ -34,4 +34,4 @@ I chose a cheap 12V PC fan for this project as I wasn't too worried about the pe
 
 I wanted to test out the HAL drivers I had written whilst following the course: "Mastering Microcontroller and Embedded Driver Development" by Kiran Nayak. Therefore I only included the ARM CMSIS header file for my specific MCU. I found it challenging at first to work out how to split my code into different layers but I ended up settling with this design:
 
-[Project Layout Diagram](Docs/FumeExtractor.drawio.svg)
+[Project Layout Diagram](./Docs/FumeExtractor.drawio.svg)
