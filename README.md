@@ -35,7 +35,7 @@ When turned on, the system will initialise all peripherals before entering the "
 * PB6 - SCL line
 * PB7 - SDA line
 
-<img width="1364" height="690" alt="image" src="https://github.com/user-attachments/assets/683fb591-80ae-4388-8800-9b6905e9deb0" />
+<img width="130" height="69" alt="image" src="https://github.com/user-attachments/assets/683fb591-80ae-4388-8800-9b6905e9deb0" />
 
 
 ## Design Choices
