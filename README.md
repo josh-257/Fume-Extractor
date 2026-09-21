@@ -8,7 +8,7 @@ This system is designed to detect solder fumes in the air and extract the harmfu
 
 #### This system has 4 states of operation:
 
-*  READY_TO_START - Fan stops, "Ready to start..." message displayed.
+*  READY_TO_START - Fan stopped, "Ready to start..." message displayed.
 *  NO_FUMES_DETECTED - Fan runs at 25% speed, shows air quality readings.
 *  FUMES_DETECTED - Fan runs at 100% speed, shows air quality readings and "FUMES DETECTED!" message.
 *  RESTART - Fan stops, switches back to READY_TO_START state.
@@ -22,9 +22,21 @@ When turned on, the system will initialise all peripherals before entering the "
 
 ## Hardware
 
+#### Components
+
 * Display - ELEGOO OLED Display Screen Module 0.96, 128 × 64 White (Display driver SSD1306)
 * Gas sensor - EaseSunny SGP30 Gas Sensor Module.
 * Fan - Arctic P12 Pro, 4 Pin PWM-controlled.
+
+#### Pin Layout
+
+* PB0 - PWM Output
+* PA1 - Button Sensing
+* PB6 - SCL line
+* PB7 - SDA line
+
+<img width="1364" height="690" alt="image" src="https://github.com/user-attachments/assets/683fb591-80ae-4388-8800-9b6905e9deb0" />
+
 
 ## Design Choices
 
@@ -38,8 +50,9 @@ I chose a 12V PC fan for this project as I wasn't too worried about the performa
 
 #### Software Architecture
 
-I wanted to test out the HAL drivers I had written whilst following the course: "Mastering Microcontroller and Embedded Driver Development" by Kiran Nayak. Therefore, I only included the ARM CMSIS header file for my specific MCU. I found it challenging at first to work out how to split my code into different layers but I ended up settling with this design:
+I wanted to test the HAL drivers I wrote while following the course "Mastering Microcontroller and Embedded Driver Development" by Kiran Nayak. So I included only the ARM CMSIS header file for my specific MCU. I found it challenging at first to work out how to split my code into different layers but I ended up settling with this design:
 
 <img src="./Docs/FumeExtractor.drawio.svg" alt="Fume Extractor Architecture" width="600">
+
 
 
