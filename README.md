@@ -54,5 +54,5 @@ I wanted to test the HAL drivers I wrote while following the course "Mastering M
 
 <img src="./Docs/FumeExtractor.drawio.svg" alt="Fume Extractor Architecture" width="600">
 
-
+My main concern was to separate my code into distinct layers that each served one purpose. 
 
