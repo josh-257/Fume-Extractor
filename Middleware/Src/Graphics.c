@@ -8,6 +8,10 @@
 #include <stdint.h>
 #include <stddef.h>
 
+/*
+ * Converts characters into a set of eight bytes to be displayed.
+ * Each bit is a pixel and each byte's bits are stored vertically.
+ */
 const uint8_t font_table[FONT_CHARS][FONT_WIDTH] = {
     {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, // 0x20 (' ')
     {0x00, 0x00, 0x5F, 0x00, 0x00, 0x00, 0x00, 0x00}, // 0x21 ('!')
@@ -106,11 +110,11 @@ const uint8_t font_table[FONT_CHARS][FONT_WIDTH] = {
     {0x10, 0x08, 0x08, 0x10, 0x08, 0x00, 0x00, 0x00}, // 0x7E ('~')
 };
 
-static void drawChar(const uint8_t symbol)
+static void drawChar(uint8_t symbol)
 {
   if(symbol > '~' || symbol < ' ')
   {
-    return;
+    symbol = '?';
   }
 
   for(uint8_t i = 0; i < 8; i++)
@@ -119,16 +123,15 @@ static void drawChar(const uint8_t symbol)
   }
 }
 
-void GFX_drawString(uint8_t *pbuffer)
+void GFX_drawString(uint8_t *pbuffer, uint16_t maxLen)
 {
   if(pbuffer == NULL)
   {
     return;
   }
-  while(*pbuffer)
+  for(uint16_t i = 0; pbuffer[i] != '\0' && i < maxLen; i++)
   {
-    drawChar(*pbuffer);
-    pbuffer++;
+    drawChar(pbuffer[i]);
   }
 }
 
@@ -138,7 +141,7 @@ void GFX_setCursor(uint16_t col, uint16_t line)
     {
       return;
     }
-    FB_setFrameBuffIndex(col + (line * 128) + 1);
+    FB_setFrameBuffIndex(col + (line * FRAME_WIDTH) + 1);
 }
 
 void GFX_clearFrame(void)

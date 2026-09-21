@@ -10,7 +10,6 @@
 
 #include "Driver_GPIO.h"
 #include "Driver_I2C.h"
-#include "Driver_EXTI.h"
 #include "Driver_PWM.h"
 
 #include <stdint.h>

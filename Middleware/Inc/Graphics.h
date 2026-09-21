@@ -18,8 +18,10 @@
  * @brief   Inserts a string of text into the frame buffer.
  * @param   pbuffer: Pointer to string to be copied into
  *          frame buffer.
+ * @param   maxLen: Int giving the max number of chars to
+ *          draw.
  */
-void GFX_drawString(uint8_t *pbuffer);
+void GFX_drawString(uint8_t *pbuffer, uint16_t maxLen);
 
 /*****************************************************
  * @brief   Positions the cursor to the specified line and

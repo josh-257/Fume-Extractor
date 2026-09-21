@@ -8,7 +8,7 @@
 #ifndef INC_DRIVER_SSD1306_H_
 #define INC_DRIVER_SSD1306_H_
 
-
+#include "BSP.h"
 #include <stddef.h>
 #include <stdint.h>
 

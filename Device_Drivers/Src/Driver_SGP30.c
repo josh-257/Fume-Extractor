@@ -6,10 +6,6 @@
  */
 #include "Driver_SGP30.h"
 
-#include <stdbool.h>
-#include "stm32f407xx.h"
-#include "stm32f4xx.h"
-#include "BSP.h"
 
 
 void SGP30_sensorInit(void)

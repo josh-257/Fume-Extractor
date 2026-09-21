@@ -4,14 +4,14 @@
  *  This system has 4 states of operation:
  *
  *  READY_TO_START - Fan stopped, no readings shown.
- *  NO_FUMES_DETECTED - Fan runs at low speed, shows air quality readings.
- *  FUMES_DETECTED - Fan runs at high speed, shows air quality readings and "FUMES DETECTED!" message.
+ *  NO_FUMES_DETECTED - Fan runs at 25% speed, shows air quality readings.
+ *  FUMES_DETECTED - Fan runs at 100% speed, shows air quality readings and "FUMES DETECTED!" message.
  *  RESTART - Fan stopped, switches back to READY_TO_START state.
  *
  *  Air quality readings:
  *
- *  Total Volatile Organic Compounds (TVOC) measured in parts per billion.
- *  Estimated CO2 (ECO2) calculated in parts per million.
+ *  Total Volcanic Organic Compounds (TVOC) measured in parts per billion.
+ *  Estimated Co2 (ECO2) calculated in parts per million.
  */
 #include <stdio.h>
 #include <stdbool.h>
@@ -20,24 +20,13 @@
 #include "Graphics.h"
 #include "BSP.h"
 
-//Systick load register value to produce 1ms interrupts at 16MHz clock speed
-#define SYSTICK_RELOAD 0x3E80
+//Systick load register value to produce 1ms interrupts
+#define DELAY_MS 0x3E80
 
-#define FUME_THRESHOLD  60 //Parts per billion
-#define FUME_EXTRACT_TIME 10 //Seconds
+#define FUME_THRESHOLD  60
 
-#define SENS_POLL_RATE 1000 //milliseconds
-
-//Index for sensor data array
-#define TVOC 1
+#define VOC 1
 #define ECO2 0
-
-#define BTN_SAMPLE_RATE 5 //milliseconds
-
-#define DEBOUNCE_MASK 0xE000
-#define DEBOUNCE_PATTERN 0xF000
-
-#define SENS_STR_MAX_LEN 20
 
 typedef enum {
   READY_TO_START,
@@ -49,17 +38,19 @@ typedef enum {
 //Count number of ms since program start
 volatile uint32_t millis;
 
-volatile bool btnPressEvent = false;
+//Define global variable to hold system state
+volatile SystemState_t systemState = READY_TO_START;
+
+volatile bool btnPressed = false;
 
 void setup(void);
 void displayStartUpMsg(void);
 void displaySensorData(uint16_t *sensorData);
 void delay(uint32_t u_sec);
-bool checkBtnPressEvent(void);
+bool debounceButton(void);
 
 int main(void)
 {
-  SystemState_t systemState = READY_TO_START;
   uint32_t prevMillis = 0;
   uint16_t *sensorData;
   uint32_t seconds = 0;
@@ -77,9 +68,8 @@ int main(void)
         displayStartUpMsg();
 
         //Hold until button pressed
-        while(btnPressEvent == false);
-
-        btnPressEvent = false;
+        while(btnPressed == false);
+        btnPressed = false;
         FC_setFanSpeed(FAN_LOW);
         systemState = NO_FUMES_DETECTED;
 
@@ -87,36 +77,35 @@ int main(void)
 
       case NO_FUMES_DETECTED:
 
-        //Check/display air quality readings according to poll rate
-        if(millis - prevMillis >= SENS_POLL_RATE)
+        //Check/display air quality readings every second
+        if(millis - prevMillis >= 1000)
         {
           GFX_clearFrame();
           sensorData = SNS_getSensorData();
           //If reading exceeds threshold, switch into fumes detected state
-          if(sensorData[TVOC] > FUME_THRESHOLD)
+          if(sensorData[VOC] > FUME_THRESHOLD)
           {
             FC_setFanSpeed(FAN_HIGH);
             systemState = FUMES_DETECTED;
           }
           displaySensorData(sensorData);
-          GFX_sendFrame();
           prevMillis = millis;
         }
-        if(btnPressEvent)
+        if(btnPressed)
         {
-          btnPressEvent = false;
+          btnPressed = false;
           systemState = RESTART;
         }
 
         break;
       case FUMES_DETECTED:
 
-        //Check and display air quality readings according to poll rate
-        if(millis - prevMillis >= SENS_POLL_RATE)
+        //Check and display air quality readings every second
+        if(millis - prevMillis >= 1000)
         {
           sensorData = SNS_getSensorData();
           //If fumes dissipate after 10 sec switch back to no fumes detected state
-          if(sensorData[TVOC] < FUME_THRESHOLD && seconds >= FUME_EXTRACT_TIME)
+          if(sensorData[VOC] < FUME_THRESHOLD && seconds > 30)
           {
             FC_setFanSpeed(FAN_LOW);
             systemState = NO_FUMES_DETECTED;
@@ -125,17 +114,17 @@ int main(void)
 
           GFX_clearFrame();
           displaySensorData(sensorData);
+
           //Alert user that fumes have been detected
           GFX_setCursor(0, 6);
-          GFX_drawString((uint8_t*)"FUMES DETECTED!");
+          GFX_drawString((uint8_t*)"FUMES DETECTED");
           GFX_sendFrame();
           prevMillis = millis;
           seconds++;
         }
-        if(btnPressEvent)
+        if(btnPressed)
         {
-          seconds = 0;
-          btnPressEvent = false;
+          btnPressed = false;
           systemState = RESTART;
         }
         break;
@@ -153,30 +142,15 @@ int main(void)
   return 0;
 }
 
-void SysTick_Handler(void)
-{
-  millis++;
-
-  //Check if button pressed every 5ms
-  if(millis % BTN_SAMPLE_RATE == 0)
-  {
-    if(debounceButton())
-    {
-      btnPressEvent = true;
-    }
-  }
-}
-
 void setup(void)
 {
-
   BSP_init();
 
   SSD1306_displayInit();
   delay(50);
   SGP30_sensorInit();
 
-  SysTick_Config(SYSTICK_RELOAD);
+  SysTick_Config(DELAY_MS);
 
   FC_fanInit();
 }
@@ -186,45 +160,50 @@ void delay(uint32_t u_sec)
   for(uint32_t i = 0; i < u_sec; i++);
 }
 
-
 void displayStartUpMsg(void)
 {
   GFX_setCursor(0,0);
   GFX_drawString((uint8_t*)"System Ready");
+  GFX_setCursor(0, 3);
+  GFX_drawString((uint8_t*)"Press to start");
+  GFX_setCursor(0, 6);
+  GFX_drawString((uint8_t*)"Press again to  stop...");
   GFX_sendFrame();
 }
 
-//Convert sensor data input into string to display
 void displaySensorData(uint16_t *sensorData)
 {
-  uint8_t sensorString[SENS_STR_MAX_LEN];
+  uint8_t sensorString[20];
 
-  snprintf((char*)sensorString, sizeof(sensorString), "TVOC: %4u", sensorData[TVOC]);
+  snprintf((char*)sensorString, sizeof(sensorString), "TVOC: %4u", sensorData[VOC]);
   GFX_setCursor(0, 0);
-  GFX_drawString((uint8_t*)sensorString, sizeof(sensorString));
+  GFX_drawString((uint8_t*)sensorString);
 
-  snprintf((char*)sensorString, sizeof(sensorString), "eCO2: %5u", sensorData[ECO2]);
+  snprintf((char*)sensorString, sizeof(sensorString), "eC02: %5u", sensorData[ECO2]);
   GFX_setCursor(0, 3);
-  GFX_drawString((uint8_t*)sensorString, sizeof(sensorString));
+  GFX_drawString((uint8_t*)sensorString);
+
+  GFX_sendFrame();
 }
 
+void SysTick_Handler(void)
+{
+  millis++;
 
-/*****************************************************
- * @brief Debounce button, return true once per confirmed press.
- *
- *        Should be called at a fixed rate by a timer.
- *
- *        Records one sample of the button as one bit (newest sample bit 0).
- *
- *        Based on Jack Ganssle's "A Guide to Debouncing", DebounceSwitch2().
- */
-bool checkBtnPressEvent(void)
+  if(millis % 5 == 0)
+  {
+    if(debounceButton())
+    {
+      btnPressed = true;
+    }
+  }
+}
+
+bool debounceButton(void)
 {
   static uint16_t State = 0;  // Current debounce status
-
-  State = (State << 1) | !BSP_ButtonPressed() | DEBOUNCE_MASK;
-
-  if (State == DEBOUNCE_PATTERN)
+  State = (State << 1) | !BSP_ButtonPressed() | 0xe000;
+  if (State == 0xf000)
   {
     return true;
   }

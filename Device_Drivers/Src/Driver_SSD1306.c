@@ -4,10 +4,6 @@
  *  Created on: 13 Aug 2026
  *      Author: joshb
  */
-#include <stdbool.h>
-#include "stm32f407xx.h"
-#include "stm32f4xx.h"
-#include "BSP.h"
 #include "Driver_SSD1306.h"
 
 void delay_u(uint32_t u_sec)

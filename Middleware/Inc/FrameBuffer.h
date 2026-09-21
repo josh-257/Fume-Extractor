@@ -11,16 +11,18 @@
 #include <stdbool.h>
 
 #include "Driver_SSD1306.h"
+#include <stdint.h>
 
 #define FRAME_WIDTH 128
 #define FRAME_PAGES 8
 #define FB_SIZE (FRAME_WIDTH * FRAME_PAGES)
+#define DISP_DATA_CMD 0x40
+#define FB_DATA_START 1 //Index at which the frame buffer data begins
 
 typedef struct {
-  uint8_t buffer[FB_SIZE + 1]; //Extra byte to send display command (0x40)
+  uint8_t buffer[FB_SIZE + 1]; //Extra byte to send display data command
   uint16_t index;
 }frame_buff_t;
-
 
 /*****************************************************
  * @brief   Takes 1 byte input and places it into the
@@ -43,10 +45,9 @@ void FB_setFrameBuffIndex(uint16_t index);
 void FB_clearFrame(void);
 
 /*****************************************************
- * @brief   Passes frame buffer plus display command
+ * @brief   Passes frame buffer to
  *          display device driver.
  */
 void FB_sendFrame(void);
-void FB_sendblock(void);
 
 #endif /* INC_FRAMEBUFFER_H_ */

@@ -26,7 +26,7 @@ typedef enum {
 void FC_setFanSpeed(FanSetting_t setting);
 
 /*****************************************************
- * @brief   Calls PWM_init().
+ * @brief   Initialises fan PWM signal via calling PWM_init().
  */
 void FC_fanInit(void);
 
