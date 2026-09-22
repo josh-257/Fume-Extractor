@@ -35,7 +35,7 @@ When turned on, the system will initialise all peripherals before entering the "
 * PB6 - SCL line
 * PB7 - SDA line
 
-<img width="130" height="69" alt="image" src="https://github.com/user-attachments/assets/683fb591-80ae-4388-8800-9b6905e9deb0" />
+<img src="./Docs/PinDiagram.drawio" alt="Pin Layout Diagram" width="300">
 
 
 ## Design Choices
@@ -54,5 +54,5 @@ I wanted to test the HAL drivers I wrote while following the course "Mastering M
 
 <img src="./Docs/FumeExtractor.drawio.svg" alt="Fume Extractor Architecture" width="600">
 
-My main concern was to separate my code into distinct layers that each served one purpose. 
+My main concern was separating my code into distinct layers, each serving one purpose. The board support package provides all the pin settings specific to my MCU dev board, combining them into one short header file for clarity and making them quick to change. It also contains the handle structs for I2C and GPIO HAL drivers, separating the peripheral settings from higher layers. The device drivers contain API's for initialising and sending/receiving data from the device. The middleware deals with the graphics/frame buffering for the display, gathering sensor data and controlling the fan speed. The application layer (main) is a state machine that controls how the system responds and the order in which the code runs.
 
