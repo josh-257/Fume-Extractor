@@ -22,9 +22,16 @@
 
 #define SENS_DATA_LEN 2
 
-
-
+/*****************************************************
+ * @brief Retrieves the sensor reading.
+ * @note  This function has a delay of 12ms to wait for
+ *        the sensing device.
+ */
 uint8_t *SGP30_getSensorReading(void);
+
+/*****************************************************
+ * @brief Sends init cmd to device.
+ */
 void SGP30_sensorInit(void);
 
 #endif /* INC_DRIVER_SGP30_H_ */

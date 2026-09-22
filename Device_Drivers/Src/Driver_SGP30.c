@@ -6,12 +6,8 @@
  */
 #include "Driver_SGP30.h"
 
-
-
 void SGP30_sensorInit(void)
 {
-
-
   static const uint8_t cmds[] = {
       SENSOR_INIT_CMD_MSB,
       SENSOR_INIT_CMD_LSB
@@ -22,6 +18,7 @@ void SGP30_sensorInit(void)
 
 uint8_t *SGP30_getSensorReading(void)
 {
+  //Buffer to hold MSB, LSB and CRC for TVOC and ECO2 data
   static uint8_t sensorData[6];
 
   static const uint8_t cmds[] = {
@@ -29,6 +26,7 @@ uint8_t *SGP30_getSensorReading(void)
         SENSOR_MEASURE_CMD_LSB
     };
 
+  //Send cmd to tell SGP30 to start measuring
   BSP_sendData(cmds, SENSOR_MEASURE_CMD_LEN, SENSOR_SLAVE_ADDR, DISABLE);
 
   //Wait 12ms to for device to send calculated reading

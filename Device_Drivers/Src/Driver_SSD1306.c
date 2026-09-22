@@ -41,25 +41,6 @@ void SSD1306_displayInit(void)
        0xA4,  // Entire Display ON (Resume to RAM content)
        0xA6,  // Set Normal Display (Not inverted. 1 = Pixel On, 0 = Pixel Off)
        0x2E, 0  // Deactivate Scroll (Safety reset)
-
-
-
-  //From application note
-//              0xAE,  // Display OFF (Sleep Mode)
-//              0xD5,  // Set Display Clock Divide Ratio / Oscillator Frequency
-//              0x80,
-//       0xA8, 0x3F,  // Set MUX Ratio (0xA8, 0x3F)
-//       0xD3, 0x00,  // Set Display Offset (0xD3, 0x00)
-//       0x40,        // Set Display Start Line (0x40)
-//       0xA1,        // Set Segment re-map (0xA0 or 0xA1)
-//       0xC8,        // Set COM Output Scan Direction (0xC0 or 0xC8)
-//       0xDA, 0x02,  // Set COM Pins hardware configuration (0xDA, 0x02)
-//       0x81, 0x7F,  // Set Contrast Control (0x81, 0x7F)
-//       0xA4,        // Disable Entire Display On (0xA4)
-//       0xA6,        // Set Normal Display (0xA6)
-//       0xD5, 0x80,  // Set Osc Frequency (0xD5, 0x80)
-//       0x8D, 0x14,  // Enable charge pump regulator (0x8D, 0x14)
-//       0xAF
   };
 
   BSP_sendData(displayInitCmds, DISPLAY_INIT_CMDS_LEN, OLED_SLAVE_ADDRESS, DISABLE);
