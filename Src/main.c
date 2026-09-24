@@ -64,7 +64,7 @@ int main(void)
   uint16_t *sensorData;
   uint32_t seconds = 0;
 
-  //Initalise peripherals, sensor, display and fan drivers
+  //Initialise peripherals, sensor, display and fan drivers
   setup();
   FC_setFanSpeed(FAN_STOP);
   for(;;)
@@ -127,7 +127,7 @@ int main(void)
           displaySensorData(sensorData);
           //Alert user that fumes have been detected
           GFX_setCursor(0, 6);
-          GFX_drawString((uint8_t*)"FUMES DETECTED!");
+          GFX_drawString("FUMES DETECTED!");
           GFX_sendFrame();
           prevMillis = millis;
           seconds++;
@@ -160,7 +160,7 @@ void SysTick_Handler(void)
   //Check if button pressed every 5ms
   if(millis % BTN_SAMPLE_RATE == 0)
   {
-    if(debounceButton())
+    if(checkBtnPressEvent() == true)
     {
       btnPressEvent = true;
     }
@@ -190,22 +190,22 @@ void delay(uint32_t u_sec)
 void displayStartUpMsg(void)
 {
   GFX_setCursor(0,0);
-  GFX_drawString((uint8_t*)"System Ready");
+  GFX_drawString("System Ready");
   GFX_sendFrame();
 }
 
 //Convert sensor data input into string to display
 void displaySensorData(uint16_t *sensorData)
 {
-  uint8_t sensorString[SENS_STR_MAX_LEN];
+  char sensorString[SENS_STR_MAX_LEN];
 
-  snprintf((char*)sensorString, sizeof(sensorString), "TVOC: %4u", sensorData[TVOC]);
+  snprintf(sensorString, sizeof(sensorString), "TVOC: %4u", sensorData[TVOC]);
   GFX_setCursor(0, 0);
-  GFX_drawString((uint8_t*)sensorString, sizeof(sensorString));
+  GFX_drawString(sensorString);
 
-  snprintf((char*)sensorString, sizeof(sensorString), "eCO2: %5u", sensorData[ECO2]);
+  snprintf(sensorString, sizeof(sensorString), "eCO2: %5u", sensorData[ECO2]);
   GFX_setCursor(0, 3);
-  GFX_drawString((uint8_t*)sensorString, sizeof(sensorString));
+  GFX_drawString(sensorString);
 }
 
 
