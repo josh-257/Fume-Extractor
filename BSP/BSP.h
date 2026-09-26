@@ -45,7 +45,7 @@
 
 /*****************************************************
  * @brief   Initialises required peripheral clocks, GPIO
- *          pins, external interrupts, I2C and PWM peripherals.
+ *          pins, I2C and PWM peripherals.
  */
 void BSP_init(void);
 
@@ -60,7 +60,7 @@ void BSP_init(void);
  * @param   slave_address: 7 bit address of the chosen
  *          slave to send the transmission to.
  * @param   Sr: Option for repeated start condition,
- *          I2C_SR_EN to enable andI2C_SR_DI to disable.
+ *          Enable/Disable enum.
  * @note    This is a blocking function.
  */
 void BSP_sendData(const uint8_t *pTxBuffer, uint32_t len, uint8_t slave_address, uint8_t Sr);
@@ -73,8 +73,8 @@ void BSP_sendData(const uint8_t *pTxBuffer, uint32_t len, uint8_t slave_address,
  *           data will land.
  * @param    len: Specifies the length (in bytes) of the data to be received.
  * @param    slave_address: 7 bit address of the chosen slave to read data from.
- * @param    Sr: Option for repeated start condition, I2C_SR_EN to enable and
- *           I2C_SR_DI to disable.
+ * @param    Sr: Option for repeated start condition,
+ *           Enable/Disable enum.
  * @note     This is a blocking function.
  */
 void BSP_receiveData(uint8_t *pRxBuffer, uint32_t len, uint8_t slave_address, uint8_t Sr);
