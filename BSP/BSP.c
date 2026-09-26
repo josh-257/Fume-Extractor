@@ -13,7 +13,6 @@ static void PWM_GPIOInits(void);
 static void button_GPIOInits(void);
 static void Clock_init(void);
 static void I2C1_inits(void);
-static void button_EXTIInits(void);
 
 static I2C_Handle_t I2CHandle;
 static GPIO_Handle_t btnPin;
@@ -28,7 +27,6 @@ void BSP_init(void)
     I2C1_inits();
 
     PWM_GPIOInits();
-    NVIC_EnableIRQ(EXTI1_IRQn);
 }
 
 void BSP_sendData(const uint8_t *pTxBuffer, uint32_t len, uint8_t slave_address, uint8_t Sr)
@@ -107,15 +105,6 @@ static void I2C1_inits(void)
 
   I2C_Init(&I2CHandle);
   I2C_PeripheralControl(I2CHandle.pI2Cx, ENABLE);
-}
-
-static void button_EXTIInits(void)
-{
-  EXTI_Config_t btn;
-  btn.Port = BUTTON_EXTI_PORT;
-  btn.PinNumber = BUTTON_PIN_NO;
-  btn.EdgeDetection = BUTTON_EDGE_DETECT;
-  EXTI_Init(&btn);
 }
 
 

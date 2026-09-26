@@ -20,9 +20,6 @@
 #define BUTTON_PIN_MODE       GPIO_MODE_IN
 #define BUTTON_PUPD_SETTING   GPIO_PIN_PU
 
-#define BUTTON_EXTI_PORT      EXTI_PORT_A
-#define BUTTON_EDGE_DETECT    EXTI_TRIGGER_RISING
-
 //I2C setup - SCL (PB6), SDA (PB7)
 #define I2C_SCL_PIN_NO         6
 #define I2C_SDA_PIN_NO         7
