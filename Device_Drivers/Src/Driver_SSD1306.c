@@ -13,7 +13,7 @@ void delay_u(uint32_t u_sec)
 
 void SSD1306_displayInit(void)
 {
-  static const uint8_t displayInitCmds[] = {
+  const uint8_t displayInitCmds[] = {
 
        0x00,  // I2C Control Byte: Tells SSD1306 that all following bytes are COMMANDS
        0xAE,  // Display OFF (Sleep Mode)
@@ -45,11 +45,6 @@ void SSD1306_displayInit(void)
 
   BSP_sendData(displayInitCmds, DISPLAY_INIT_CMDS_LEN, OLED_SLAVE_ADDRESS, DISABLE);
 
-  static uint8_t buffer[1025];
-  buffer[0] = 0x40;
-
-  BSP_sendData(buffer, 1025, OLED_SLAVE_ADDRESS, DISABLE);
-
   uint8_t start[] = {0x00, 0xAF};
   BSP_sendData(start, 2, OLED_SLAVE_ADDRESS, DISABLE);
 }
@@ -58,15 +53,14 @@ void SSD1306_FlushFrame(uint8_t *frame)
 {
   SSD1306_resetCursor();
   delay_u(100);
-//  uint8_t cmd = OLED_CONTROL_BYTE_DATA;
-//  BSP_sendData(&cmd, 1, OLED_SLAVE_ADDRESS, DISABLE);
+
   BSP_sendData(frame, FRAME_BUFFER_SIZE, OLED_SLAVE_ADDRESS, DISABLE);
 }
 
 void SSD1306_resetCursor(void)
 {
 
-  //Array to store sequence of commands
+  //Temporary buffer to store commands
   uint8_t cmd[SET_CURSOR_CMD_LEN];
 
   cmd[0] = OLED_CONTROL_BYTE_COMMAND;

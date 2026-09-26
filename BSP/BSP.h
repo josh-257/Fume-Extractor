@@ -59,8 +59,8 @@ void BSP_init(void);
  *          transmission.
  * @param   slave_address: 7 bit address of the chosen
  *          slave to send the transmission to.
- * @param   Sr: Option for repeated start condition,
- *          Enable/Disable enum.
+ * @param   Sr: Option for repeated start condition, specified with
+ *          ENABLE/DISABLE enum.
  * @note    This is a blocking function.
  */
 void BSP_sendData(const uint8_t *pTxBuffer, uint32_t len, uint8_t slave_address, uint8_t Sr);
@@ -73,8 +73,8 @@ void BSP_sendData(const uint8_t *pTxBuffer, uint32_t len, uint8_t slave_address,
  *           data will land.
  * @param    len: Specifies the length (in bytes) of the data to be received.
  * @param    slave_address: 7 bit address of the chosen slave to read data from.
- * @param    Sr: Option for repeated start condition,
- *           Enable/Disable enum.
+ * @param    Sr: Option for repeated start condition, specified with
+ *           ENABLE/DISABLE enum.
  * @note     This is a blocking function.
  */
 void BSP_receiveData(uint8_t *pRxBuffer, uint32_t len, uint8_t slave_address, uint8_t Sr);

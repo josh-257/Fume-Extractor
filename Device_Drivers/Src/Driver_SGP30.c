@@ -8,7 +8,7 @@
 
 void SGP30_sensorInit(void)
 {
-  static const uint8_t cmds[] = {
+  const uint8_t cmds[] = {
       SENSOR_INIT_CMD_MSB,
       SENSOR_INIT_CMD_LSB
   };
@@ -18,10 +18,10 @@ void SGP30_sensorInit(void)
 
 uint8_t *SGP30_getSensorReading(void)
 {
-  //Buffer to hold MSB, LSB and CRC for TVOC and ECO2 data
+  //Static buffer to hold MSB, LSB and CRC for TVOC and ECO2 data
   static uint8_t sensorData[6];
 
-  static const uint8_t cmds[] = {
+  const uint8_t cmds[] = {
         SENSOR_MEASURE_CMD_MSB,
         SENSOR_MEASURE_CMD_LSB
     };

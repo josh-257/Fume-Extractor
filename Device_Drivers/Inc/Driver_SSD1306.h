@@ -12,10 +12,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
-// --- SSD1306 COMMAND REGISTER MACROS ---
-
 //Device address
-#define OLED_SLAVE_ADDRESS  0x3C
+#define OLED_SLAVE_ADDRESS              0x3C
 
 #define OLED_CONTROL_BYTE_COMMAND       0x00
 #define OLED_CONTROL_BYTE_DATA          0x40
@@ -38,8 +36,19 @@
  */
 void SSD1306_displayInit(void);
 
-void SSD1306_FlushFrame(uint8_t frame[]);
+/*****************************************************
+ * @brief Resets display cursor back to 0 before sending
+ *        frame buffer to display.
+ * @param frame: Pointer frame buffer.
+ * @note  Contains a 12 micro second delay after set cursor
+ *        command before sending frame buffer.
+ */
+void SSD1306_FlushFrame(uint8_t *frame);
 
+/*****************************************************
+ * @brief Resets display vertical and horizontal cursor
+ *        to 0.
+ */
 void SSD1306_resetCursor(void);
 
 #endif /* INC_DRIVER_SSD1306_H_ */

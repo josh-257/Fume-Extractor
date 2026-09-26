@@ -12,10 +12,12 @@
 
 #define SENSOR_SLAVE_ADDR           0x58
 
+//16 bit initialise command
 #define SENSOR_INIT_CMD_MSB         0x20
 #define SENSOR_INIT_CMD_LSB         0x03
 #define SENSOR_INIT_CMD_LEN         (sizeof(cmds)/sizeof(cmds[0]))
 
+//16 bit measure command
 #define SENSOR_MEASURE_CMD_MSB      0x20
 #define SENSOR_MEASURE_CMD_LSB      0x08
 #define SENSOR_MEASURE_CMD_LEN      (sizeof(cmds)/sizeof(cmds[0]))
@@ -24,13 +26,13 @@
 
 /*****************************************************
  * @brief Retrieves the sensor reading.
- * @note  This function has a delay of 12ms to wait for
- *        the sensing device.
+ * @not   This function has a delay of 12ms to wait for
+ *        the sensing device to respond.
  */
 uint8_t *SGP30_getSensorReading(void);
 
 /*****************************************************
- * @brief Sends init cmd to device.
+ * @brief Sends initialise command to device.
  */
 void SGP30_sensorInit(void);
 
