@@ -20,6 +20,8 @@ When turned on, the system will initialise all peripherals before entering the "
 *  Total Volatile Organic Compounds (TVOC) measured in parts per billion.
 *  Estimated Co2 (ECO2) calculated in parts per million.
 
+<img src="./Docs/IMG_2908.jpg" alt="Picture of Project" width="500">
+
 ## Hardware
 
 #### Components
