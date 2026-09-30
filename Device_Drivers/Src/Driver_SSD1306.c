@@ -15,38 +15,22 @@ void SSD1306_displayInit(void)
 {
   const uint8_t displayInitCmds[] = {
 
-       0x00,  // I2C Control Byte: Tells SSD1306 that all following bytes are COMMANDS
-       0xAE,  // Display OFF (Sleep Mode)
-       0xD5,  // Set Display Clock Divide Ratio / Oscillator Frequency
-       0x80,  // Suggested ratio (default reset value)
-       0xA8,  // Set Multiplex Ratio
-       0x3F,  // 63 decimal = 64 rows (128x64 resolution layout)
-       0xD3,  // Set Display Offset
-       0x00,  // 0 offset (no vertical shifting)
-       0x40,  // Set Display Start Line to 0
-       0x8D,  // Charge Pump Command
-       0x14,  // Enable internal charge pump (Crucial for 3.3V/5V microcontroller power)
-       0x20,  // Set Memory Addressing Mode
-       0x00,  // Horizontal Addressing Mode (easiest for linear framebuffers)
-       0xA1,  // Set Segment Re-map (X-Axis Flip / Right-side up)
-       0xC8,  // Set COM Output Scan Direction (Y-Axis Flip / Right-side up)
-       0xDA,  // Set COM Pins Hardware Configuration
-       0x12,  // Alternative COM pin configuration (Required for 128x64)
-       0x81,  // Set Contrast Control (Brightness)
-       0xCF,  // Set contrast value (0x00 to 0xFF)
-       0xD9,  // Set Pre-charge Period
-       0xF1,  // Phase 1: 1 DCLK, Phase 2: 15 DCLKs
-       0xDB,  // Set VCOMH Deselect Level
-       0x40,  // ~0.77 x Vcc
-       0xA4,  // Entire Display ON (Resume to RAM content)
-       0xA6,  // Set Normal Display (Not inverted. 1 = Pixel On, 0 = Pixel Off)
-       0x2E, 0  // Deactivate Scroll (Safety reset)
+       OLED_CONTROL_BYTE_COMMAND,
+       0xA8, 0x3F, //Set Mux
+       0xD3, 0x00, //Display Offset
+       0x40, //Display start line
+       0xA1, //Display orientation (Landscape)
+       0xC8,
+       0xDA, 0x12, //COM pin hardware config
+       0x81, 0x7F, //Screen contrast
+       0xA4,
+       0xA6,
+       0xD5, 0x80, //Oscillator frequency
+       0x8D, 0x14, //Enable charge pump regulator
+       0xAF
   };
 
   BSP_sendData(displayInitCmds, DISPLAY_INIT_CMDS_LEN, OLED_SLAVE_ADDRESS, DISABLE);
-
-  uint8_t start[] = {0x00, 0xAF};
-  BSP_sendData(start, 2, OLED_SLAVE_ADDRESS, DISABLE);
 }
 
 void SSD1306_FlushFrame(uint8_t *frame)
