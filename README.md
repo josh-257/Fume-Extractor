@@ -26,7 +26,7 @@ When turned on, the system will initialise all peripherals before entering the "
 
 #### Components
 
-* Display - ELEGOO OLED Display Screen Module 0.96, 128 × 64 White (Display driver SSD1306)
+* Display - ELEGOO OLED Display Screen Module 0.96, 128 × 64 White (Display driver SSD1306).
 * Gas sensor - EaseSunny SGP30 Gas Sensor Module.
 * Fan - Arctic P12 Pro, 4 Pin PWM-controlled.
 
@@ -36,9 +36,6 @@ When turned on, the system will initialise all peripherals before entering the "
 * PA1 - Button Sensing
 * PB6 - SCL line
 * PB7 - SDA line
-
-<img src="./Docs/PinDiagram.drawio" alt="Pin Layout Diagram" width="300">
-
 
 ## Design Choices
 
@@ -52,9 +49,9 @@ I chose a 12V PC fan for this project as I wasn't too worried about the performa
 
 #### Software Architecture
 
-I wanted to test the HAL drivers I wrote while following the course "Mastering Microcontroller and Embedded Driver Development" by Kiran Nayak. So I included only the ARM CMSIS header file for my specific MCU. I found it challenging at first to work out how to split my code into different layers but I ended up settling with this design:
+I wanted to test the HAL drivers I wrote whilst following the course "Mastering Microcontroller and Embedded Driver Development" by Kiran Nayak. So I included only the ARM CMSIS header files for my specific MCU. I found it challenging at first to work out how to split my code into different layers but I ended up settling on this design:
 
 <img src="./Docs/FumeExtractor.drawio.svg" alt="Fume Extractor Architecture" width="600">
 
-My main concern was separating my code into distinct layers, each serving one purpose. The board support package provides all the pin settings specific to my MCU dev board, combining them into one short header file for clarity and making them quick to change. It also contains the handle structs for I2C and GPIO HAL drivers, separating the peripheral settings from higher layers. The device drivers contain API's for initialising and sending/receiving data from the device. The middleware deals with the graphics/frame buffering for the display, gathering sensor data and controlling the fan speed. The application layer (main) is a state machine that controls how the system responds and the order in which the code runs.
+My main concern was separating my code into distinct layers, each serving one purpose. The board support package provides all the pin settings specific to my MCU dev board, combining them into one short header file for clarity and making them quick to change. It also contains the handle structs for I2C and GPIO HAL drivers, separating the peripheral settings from higher layers. The device drivers contain API's for initialising and sending/receiving data from the device. The middleware deals with the graphics/frame buffering for the display, gathering sensor data, and controlling the fan speed. The application layer (main) is a state machine that controls how the system responds and the order in which the code runs.
 
